@@ -17,6 +17,9 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_REACT_APP_PROJECT_ID: z.string(),
+    NEXT_PUBLIC_REACT_APP_CLIENT_KEY: z.string(),
+    NEXT_PUBLIC_REACT_APP_APP_ID: z.string(),
   },
 
   /**
@@ -25,6 +28,10 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_REACT_APP_PROJECT_ID: "640cddbe-1223-4380-8268-7fa0c106db4b",
+    NEXT_PUBLIC_REACT_APP_CLIENT_KEY:
+      "ciKkOkWolLEX0CzGIo77goCGgbMSPJhc9vJYoSeR",
+    NEXT_PUBLIC_REACT_APP_APP_ID: "56291868-e544-4bda-8314-3e96793dd1e8",
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { useConnect } from "@particle-network/auth-core-modal";
+import Wallet from "./Wallet";
 
 export default function Login() {
   const { connect, connected, disconnect, connectionStatus } = useConnect();
@@ -25,9 +26,15 @@ export default function Login() {
   return (
     <div>
       {connected ? (
-        <button className="rounded-md border p-3" onClick={() => disconnect()}>
-          disconnect
-        </button>
+        <div>
+          <button
+            className="rounded-md border p-3"
+            onClick={() => disconnect()}
+          >
+            disconnect
+          </button>
+          <Wallet />
+        </div>
       ) : (
         <button className="rounded-md border p-3" onClick={() => connect()}>
           Login

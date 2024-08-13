@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import Layout2 from "~/components/Layout2";
+import RainbowKit from "~/components/RainbowKit";
+import { ParticleConnectkit } from "~/components/KonnectKit";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -17,7 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <Layout2>{children}</Layout2>
+        {/* <Layout2>{children}</Layout2> */}
+        {/* <Layout2> */}
+        <ParticleConnectkit>{children}</ParticleConnectkit>
+        {/* </Layout2> */}
+        {/* <RainbowKit /> */}
       </body>
     </html>
   );

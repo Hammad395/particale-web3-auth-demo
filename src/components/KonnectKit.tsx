@@ -1,85 +1,81 @@
 "use client";
 
+import React from "react";
+
 import { ConnectKitProvider, createConfig } from "@particle-network/connectkit";
 import { authWalletConnectors } from "@particle-network/connectkit/auth";
-import { mainnet } from "@particle-network/connectkit/chains";
+import type { Chain } from "@particle-network/connectkit/chains";
+// embedded wallet start
+import { EntryPosition, wallet } from "@particle-network/connectkit/wallet";
+// embedded wallet end
+
+// evm start
+import {
+  arbitrum,
+  base,
+  mainnet,
+  polygon,
+} from "@particle-network/connectkit/chains";
 import { evmWalletConnectors } from "@particle-network/connectkit/evm";
-import { wallet, EntryPosition } from "@particle-network/connectkit/wallet";
-import React from "react";
 import { env } from "~/env";
+// evm end
 
-const metadata = {
-  name: "My Website",
-  description: "My Website description",
-  url: "https://mywebsite.com", // origin must match your domain & subdomain
-  icons: ["https://avatars.mywebsite.com/"],
-};
+const projectId = env.NEXT_PUBLIC_REACT_APP_APP_ID as string;
+const clientKey = env.NEXT_PUBLIC_REACT_APP_CLIENT_KEY as string;
+const appId = env.NEXT_PUBLIC_REACT_APP_APP_ID as string;
+const walletConnectProjectId =
+  env.NEXT_PUBLIC_REACT_APP_WALLETCONNECT_PROJECT_ID as string;
 
-// particleAuth.init({
-//   projectId: env.NEXT_PUBLIC_REACT_APP_PROJECT_ID, // --
-//   clientKey: env.NEXT_PUBLIC_REACT_APP_CLIENT_KEY, // Retrived from https://dashboard.particle.network
-//   appId: env.NEXT_PUBLIC_REACT_APP_APP_ID,
-// });
+if (!projectId || !clientKey || !appId) {
+  throw new Error("Please configure the Particle project in .env first!");
+}
+
+const supportChains: Chain[] = [];
+// evm start
+supportChains.push(mainnet, base, arbitrum, polygon);
+// evm end
 
 const config = createConfig({
-  projectId: env.NEXT_PUBLIC_REACT_APP_PROJECT_ID, // --
-  clientKey: env.NEXT_PUBLIC_REACT_APP_CLIENT_KEY, // Retrived from https://dashboard.particle.network
-  appId: env.NEXT_PUBLIC_REACT_APP_APP_ID, // --
+  projectId,
+  clientKey,
+  appId,
   appearance: {
-    // Optional, collection of properties to alter the appearance of the connection modal
-    // Optional, label and sort wallets (to be shown in the connection modal)
     recommendedWallets: [
       { walletId: "metaMask", label: "Recommended" },
-      { walletId: "coinbaseWallet", label: "popular" },
+      { walletId: "coinbaseWallet", label: "Popular" },
     ],
-    splitEmailAndPhone: false, // Optional, displays Email and phone number entry separately
-    collapseWalletList: false, // Optional, hide wallet list behind a button
-    hideContinueButton: false, // Optional, remove "Continue" button underneath Email or phone number entry
-    connectorsOrder: ["email", "phone", "social", "wallet"], //  Optional, sort connection methods (index 0 will be placed at the top)
-    language: "en-US", // Optional, also supported ja-JP, zh-CN, zh-TW, and ko-KR
-    mode: "dark", // Optional, changes theme between light, dark, or auto (which will change it based on system settings)
-    // theme: {
-    //   "--pcm-accent-color": "#ff4d4f",
-    //   // ... other options
-    // },
-    logo: "https://...",
-    filterCountryCallingCode: (countries) => {
-      // Optional, whitelist or blacklist phone numbers from specific countries
-      return countries.filter((item) => item === "US");
-    },
+    language: "en-US",
   },
   walletConnectors: [
+    authWalletConnectors(),
+    // evm start
     evmWalletConnectors({
-      metadata: metadata, // Optional, this is Metadata used by WalletConnect and Coinbase
-      walletConnectProjectId:
-        env.NEXT_PUBLIC_REACT_APP_WALLETCONNECT_PROJECT_ID, // optional, retrieved from https://cloud.walletconnect.com
-    }),
-    authWalletConnectors({
-      // Optional, configure this if you're using social logins
-      authTypes: ["email", "google", "apple"], // Optional, restricts the types of social logins supported
-      fiatCoin: "USD", // Optional, also supports CNY, JPY, HKD, INR, and KRW
-      promptSettingConfig: {
-        // Optional, changes the frequency in which the user is asked to set a master or payment password
-        // 0 = Never ask
-        // 1 = Ask once
-        // 2 = Ask always, upon every entry
-        // 3 = Force the user to set this password
-        promptMasterPasswordSettingWhenLogin: 1,
-        promptPaymentPasswordSettingWhenSign: 1,
+      // TODO: replace it with your app metadata.
+      metadata: {
+        name: "Connectkit Demo",
+        icon:
+          typeof window !== "undefined"
+            ? `${window.location.origin}/favicon.ico`
+            : "",
+        description: "Particle Connectkit Next.js Scaffold.",
+        url: typeof window !== "undefined" ? window.location.origin : "",
       },
+      walletConnectProjectId: walletConnectProjectId,
     }),
+    // evm end
   ],
   plugins: [
+    // embedded wallet start
     wallet({
-      // Optional configurations for the attached embedded wallet modal
-      entryPosition: EntryPosition.BR, // Alters the position in which the modal button appears upon login
-      visible: true, // Dictates whether or not the wallet modal is included/visible or not
+      visible: true,
+      entryPosition: EntryPosition.BR,
     }),
+    // embedded wallet end
   ],
-  chains: [mainnet],
+  chains: supportChains as unknown as readonly [Chain, ...Chain[]],
 });
 
-// Export ConnectKitProvider to be used within your index or layout file (or use createConfig directly within those files).
+// Wrap your application with this component.
 export const ParticleConnectkit = ({ children }: React.PropsWithChildren) => {
   return <ConnectKitProvider config={config}>{children}</ConnectKitProvider>;
 };

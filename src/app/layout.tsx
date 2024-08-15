@@ -3,8 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
-import Layout2 from "~/components/Layout2";
-import RainbowKit from "~/components/RainbowKit";
+// import Layout2 from "~/components/Layout2";
 import { ParticleConnectkit } from "~/components/KonnectKit";
 
 export const metadata: Metadata = {

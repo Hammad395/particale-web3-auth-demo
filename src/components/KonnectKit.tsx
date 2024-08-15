@@ -21,7 +21,7 @@ import { evmWalletConnectors } from "@particle-network/connectkit/evm";
 import { env } from "~/env";
 // evm end
 
-const projectId = env.NEXT_PUBLIC_REACT_APP_APP_ID;
+const projectId = env.NEXT_PUBLIC_REACT_APP_PROJECT_ID;
 const clientKey = env.NEXT_PUBLIC_REACT_APP_CLIENT_KEY;
 const appId = env.NEXT_PUBLIC_REACT_APP_APP_ID;
 const walletConnectProjectId =

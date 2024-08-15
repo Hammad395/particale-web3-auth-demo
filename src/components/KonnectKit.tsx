@@ -13,6 +13,7 @@ import { EntryPosition, wallet } from "@particle-network/connectkit/wallet";
 import {
   arbitrum,
   base,
+  baseSepolia,
   mainnet,
   polygon,
 } from "@particle-network/connectkit/chains";
@@ -20,11 +21,11 @@ import { evmWalletConnectors } from "@particle-network/connectkit/evm";
 import { env } from "~/env";
 // evm end
 
-const projectId = env.NEXT_PUBLIC_REACT_APP_APP_ID as string;
-const clientKey = env.NEXT_PUBLIC_REACT_APP_CLIENT_KEY as string;
-const appId = env.NEXT_PUBLIC_REACT_APP_APP_ID as string;
+const projectId = env.NEXT_PUBLIC_REACT_APP_APP_ID;
+const clientKey = env.NEXT_PUBLIC_REACT_APP_CLIENT_KEY;
+const appId = env.NEXT_PUBLIC_REACT_APP_APP_ID;
 const walletConnectProjectId =
-  env.NEXT_PUBLIC_REACT_APP_WALLETCONNECT_PROJECT_ID as string;
+  env.NEXT_PUBLIC_REACT_APP_WALLETCONNECT_PROJECT_ID;
 
 if (!projectId || !clientKey || !appId) {
   throw new Error("Please configure the Particle project in .env first!");
@@ -32,7 +33,7 @@ if (!projectId || !clientKey || !appId) {
 
 const supportChains: Chain[] = [];
 // evm start
-supportChains.push(mainnet, base, arbitrum, polygon);
+supportChains.push(base, baseSepolia);
 // evm end
 
 const config = createConfig({
@@ -47,7 +48,9 @@ const config = createConfig({
     language: "en-US",
   },
   walletConnectors: [
-    authWalletConnectors(),
+    authWalletConnectors({
+      authTypes: ["email", "google", "facebook"],
+    }),
     // evm start
     evmWalletConnectors({
       // TODO: replace it with your app metadata.
